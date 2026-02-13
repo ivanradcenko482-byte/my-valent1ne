@@ -31,15 +31,23 @@
 </head>
 <body>
 
-    <audio id="bgMusic" loop><source src="urban_melody.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" loop>
+        <!-- Используем музыку с CDN -->
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_89abb9b0e9.mp3?filename=romantic-piano-128677.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="card" id="box">
         <!-- ШАГ 1 -->
         <div id="s1">
-            <div style="font-size: 10px; color: #888; margin-bottom: 5px;">🎶 Urban Melody - IVOXYGEN</div>
-            <div class="photo-frame"><img src="https://media.giphy.com"></div>
+            <div style="font-size: 10px; color: #888; margin-bottom: 5px;">🎵 Romantic Piano - Pixabay</div>
+            <div class="photo-frame">
+                <img src="https://media1.tenor.com/m/-B1pUkEWZ5YAAAAC/cute-couple.gif" alt="Милые котики">
+            </div>
             <h1>Любимый, это тебе! ❤️<br>Будешь моей валентинкой?</h1>
-            <div class="btns"><button id="yes">ДА!</button><button id="no">Нет</button></div>
+            <div class="btns">
+                <button id="yes">ДА!</button>
+                <button id="no">Нет</button>
+            </div>
         </div>
 
         <!-- ШАГ 2 -->
@@ -94,50 +102,42 @@
         const music = document.getElementById('bgMusic');
         let ans = {};
 
+        // Обновленные ссылки на еду
         const foodData = [
-            {n: "Паста с курицей и грибами", d: "Сливочный соус.", i: "https://povar.ru"},
-            {n: "Салат Цезарь", d: "Курица и сухарики.", i: "https://povar.ru"},
-            {n: "Греческий салат", d: "Свежесть и овощи.", i: "https://povar.ru"},
-            {n: "Курочка с пюре", d: "Домашний уют.", i: "https://povar.ru"},
-            {n: "Домашние бургеры", d: "Сытно и вкусно.", i: "https://povar.ru"}
+            {n: "Паста с курицей и грибами", d: "Сливочный соус. Итальянская классика", i: "https://img.povar.ru/mobile/9a/12/c3/a7/pasta_s_kuricei_i_gribami_v_slivkah-56957.jpg"},
+            {n: "Салат Цезарь", d: "Курица и сухарики. Хрустящий", i: "https://img.povar.ru/mobile/3c/aa/6d/26/salat_cezar_s_kuricei-54321.jpg"},
+            {n: "Греческий салат", d: "Свежесть и овощи. Фета и оливки", i: "https://img.povar.ru/mobile/21/54/8e/0a/grecheskii_salat-29766.jpg"},
+            {n: "Курочка с пюре", d: "Домашний уют. Нежное пюре", i: "https://img.povar.ru/mobile/a6/b2/8d/d6/kurinaya_grudka_s_kartofelnim_pyre-54599.jpg"},
+            {n: "Домашние бургеры", d: "Сытно и вкусно. Двойная порция сыра", i: "https://img.povar.ru/mobile/0d/77/25/b2/domashnii_burger-54851.jpg"}
         ];
 
+        // Обновленные ссылки на фильмы
         const mediaData = {
             anime: [
-                {n: "Твое имя", d: "Связь душ.", i: "https://st.kp.yandex.net"},
-                {n: "Форма голоса", d: "О прощении.", i: "https://st.kp.yandex.net"},
-                {n: "Ходячий замок", d: "Магия.", i: "https://st.kp.yandex.net"},
-                {n: "Хоримия", d: "Милая любовь.", i: "https://st.kp.yandex.net"},
-                {n: "Сад изящных слов", d: "Шедевр.", i: "https://st.kp.yandex.net"},
-                {n: "Вайолет Эвергарден", d: "О любви.", i: "https://st.kp.yandex.net"},
-                {n: "Ее заветное желание", d: "Драма.", i: "https://st.kp.yandex.net"},
-                {n: "Торадора!", d: "Комедия.", i: "https://st.kp.yandex.net"},
-                {n: "Пять см в секунду", d: "Расстояние.", i: "https://st.kp.yandex.net"},
-                {n: "Кошечка из Сакурасо", d: "Творчество.", i: "https://st.kp.yandex.net"}
+                {n: "Твое имя", d: "Связь душ. Шедевр Макото Синкая", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/84e3164e-15e9-48ea-9376-980c1351172d/300x450"},
+                {n: "Форма голоса", d: "О прощении. Трогательная история", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/75140c25-6330-4e0b-89c1-f9aa24f8dd53/300x450"},
+                {n: "Ходячий замок", d: "Магия Хаяо Миядзаки", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/aefbea3e-d41f-429c-8661-8d5778c8f198/300x450"},
+                {n: "Хоримия", d: "Милый ромком про школьников", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/e826e1ee-25cf-4e11-b229-cfe2c1cd3229/300x450"},
+                {n: "Сад изящных слов", d: "Красивейшая анимация", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/9df3c01e-82a0-4923-b643-fc99f79fe5f7/300x450"},
+                {n: "Вайолет Эвергарден", d: "О любви и чувствах", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/cd775cf3-6070-49d2-8628-39bc44af2453/300x450"},
+                {n: "Торадора!", d: "Комедия про любовь", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/233f5d8c-efb0-4c26-b754-c3a70e5703d2/300x450"},
+                {n: "Пять см в секунду", d: "История о расстоянии", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/6c2a47d1-7b17-48c3-9793-47b96370e3e2/300x450"}
             ],
             movie: [
-                {n: "До встречи с тобой", d: "Пронзительно.", i: "https://st.kp.yandex.net"},
-                {n: "Ла-Ла Ленд", d: "О мечтах.", i: "https://st.kp.yandex.net"},
-                {n: "Дневник памяти", d: "Вечная любовь.", i: "https://st.kp.yandex.net"},
-                {n: "Бойфренд из будущего", d: "О времени.", i: "https://st.kp.yandex.net"},
-                {n: "Полночь в Париже", d: "Магия.", i: "https://st.kp.yandex.net"},
-                {n: "Виноваты звезды", d: "Сильная драма.", i: "https://st.kp.yandex.net"},
-                {n: "В метре друг от друга", d: "Близко.", i: "https://st.kp.yandex.net"},
-                {n: "С любовью, Рози", d: "Дружба.", i: "https://st.kp.yandex.net"},
-                {n: "Предложение", d: "Комедия.", i: "https://st.kp.yandex.net"},
-                {n: "Вечное сияние...", d: "Гениально.", i: "https://st.kp.yandex.net"}
+                {n: "До встречи с тобой", d: "Пронзительная драма о любви", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/12cc47b5-cd3a-44df-966d-98e040d3d05a/300x450"},
+                {n: "Ла-Ла Ленд", d: "О мечтах и музыке", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/4f7a1a25-7a4e-4db5-9c7e-43f4c9af1501/300x450"},
+                {n: "Дневник памяти", d: "Вечная любовь", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/104d5e7e-1559-4d0b-a19b-4bcb4c17f2a7/300x450"},
+                {n: "Бойфренд из будущего", d: "О времени и выборе", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/d032f4f7-61c7-4082-b708-920be9c4e9a7/300x450"},
+                {n: "Виноваты звезды", d: "Сильная драма", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/bd5de15e-e389-45c1-b53e-c93001cd6b9f/300x450"},
+                {n: "В метре друг от друга", d: "Близость на расстоянии", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/ed2a618d-3f50-4d11-9a0c-905e9a43c1f2/300x450"},
+                {n: "С любовью, Рози", d: "История дружбы и любви", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/ce29d5a8-0195-40d5-9d56-6c1afb49c0db/300x450"}
             ],
             series: [
-                {n: "Нормальные люди", d: "Химия.", i: "https://st.kp.yandex.net"},
-                {n: "Алые сердца", d: "Дорама.", i: "https://st.kp.yandex.net"},
-                {n: "Один день", d: "История.", i: "https://st.kp.yandex.net"},
-                {n: "Демон", d: "Фэнтези.", i: "https://st.kp.yandex.net"},
-                {n: "Друзья", d: "Уют.", i: "https://st.kp.yandex.net"},
-                {n: "Постучись в мою дверь", d: "Турция.", i: "https://st.kp.yandex.net"},
-                {n: "Энн", d: "Нежно.", i: "https://st.kp.yandex.net"},
-                {n: "Это мы", d: "О семье.", i: "https://st.kp.yandex.net"},
-                {n: "Эмили в Париже", d: "Мода.", i: "https://st.kp.yandex.net"},
-                {n: "Мой демон", d: "Стильно.", i: "https://st.kp.yandex.net"}
+                {n: "Нормальные люди", d: "Химия между героями", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/af1f0c17-b416-4894-9f29-09937fa95f0e/300x450"},
+                {n: "Друзья", d: "Легендарный ситком", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/6626ff8a-3ae6-4f58-a7a5-723b0bff0089/300x450"},
+                {n: "Эмили в Париже", d: "Мода и романтика", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/c2b2156c-627f-44cd-b9d6-e6aa2a24de34/300x450"},
+                {n: "Это мы", d: "О семье и чувствах", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/28843f80-6529-4610-b3d3-d5c0397fc44d/300x450"},
+                {n: "Постучись в мою дверь", d: "Турецкая романтика", i: "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/ecbc42ed-f860-44c1-8ff6-4878bcd25ad6/300x450"}
             ]
         };
 
@@ -147,13 +147,16 @@
             e.target.style.top = Math.random() * (window.innerHeight - 50) + 'px';
         };
 
-        document.getElementById('yes').onclick = () => { music.play(); go(2); };
+        document.getElementById('yes').onclick = () => { 
+            music.play().catch(e => console.log("Автовоспроизведение заблокировано браузером")); 
+            go(2); 
+        };
 
         function go(s) {
             document.querySelectorAll('#box > div').forEach(d => d.classList.add('hidden'));
             document.getElementById('s' + s).classList.remove('hidden');
             if(s === 2) setInterval(spawnHeart, 300);
-            if(s === 4) document.getElementById('food-list').innerHTML = foodData.map(f => `<div class="item-card"><img src="${f.i}"><div class="item-info"><b>${f.n}</b><small>${f.d}</small></div></div>`).join('');
+            if(s === 4) document.getElementById('food-list').innerHTML = foodData.map(f => `<div class="item-card"><img src="${f.i}" alt="${f.n}"><div class="item-info"><b>${f.n}</b><small>${f.d}</small></div></div>`).join('');
         }
 
         function saveAnswers() {
@@ -162,14 +165,14 @@
         }
 
         function render(t) {
-            document.getElementById('media-list').innerHTML = mediaData[t].map(m => `<div class="item-card" onclick="showFinal('${m.n}', '${m.i}')"><img src="${m.i}"><div class="item-info"><b>${m.n}</b><small>${m.d}</small></div></div>`).join('');
+            document.getElementById('media-list').innerHTML = mediaData[t].map(m => `<div class="item-card" onclick="showFinal('${m.n}', '${m.i}')"><img src="${m.i}" alt="${m.n}"><div class="item-info"><b>${m.n}</b><small>${m.d}</small></div></div>`).join('');
         }
 
         function showFinal(n, i) {
             document.querySelectorAll('#s5 h2, #s5 .btns, #s5 > button, #media-list').forEach(el => el.classList.add('hidden'));
             document.getElementById('final').classList.remove('hidden');
-            document.getElementById('summary').innerHTML = `<b>Твои ответы:</b><br>☀️ Утро: ${ans.u}<br>🎶 Песня: ${ans.p}<br>✈️ Полет: ${ans.m}<br>💕 Память: ${ans.v}<br>😊 Радость: ${ans.r}`;
-            document.getElementById('choice-res').innerHTML = `<h3>Наш выбор: ${n}</h3><img src="${i}" style="width:120px; border-radius:15px; border:3px solid var(--main-pink);">`;
+            document.getElementById('summary').innerHTML = `<b>Твои ответы:</b><br>☀️ Утро: ${ans.u || '—'}<br>🎶 Песня: ${ans.p || '—'}<br>✈️ Полет: ${ans.m || '—'}<br>💕 Память: ${ans.v || '—'}<br>😊 Радость: ${ans.r || '—'}`;
+            document.getElementById('choice-res').innerHTML = `<h3>Наш выбор: ${n}</h3><img src="${i}" style="width:120px; border-radius:15px; border:3px solid var(--main-pink);" alt="${n}">`;
             document.body.classList.add('dark-mode');
             setInterval(spawnStar, 100);
         }
