@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для тебя ❤️</title>
+    <style>
+        :root { --main-pink: #ff4d6d; --bg-pink: #fff0f3; }
+        body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-pink); font-family: 'Georgia', serif; overflow-x: hidden; transition: 2s; }
+        .card { text-align: center; background: white; padding: 25px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); z-index: 10; width: 90%; max-width: 500px; position: relative; }
+        .photo-frame { width: 150px; height: 150px; margin: 0 auto 15px; border-radius: 20px; overflow: hidden; border: 4px solid var(--main-pink); }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        h1, h2 { color: #d62828; font-size: 18px; margin-bottom: 15px; line-height: 1.4; }
+        .btns { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        button { padding: 12px 20px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; background: var(--main-pink); color: white; transition: 0.3s; }
+        #no { background: #adb5bd; position: relative; }
+        .hidden { display: none; }
+        .scroll-area { max-height: 350px; overflow-y: auto; text-align: left; padding: 10px; border-top: 1px solid #eee; }
+        input { padding: 12px; border-radius: 10px; border: 1px solid #ffb1c1; width: 93%; margin: 8px 0; }
+        .item-card { display: flex; align-items: center; gap: 15px; background: #fff5f6; padding: 10px; border-radius: 15px; margin: 10px 0; border: 1px solid #ffe3e8; cursor: pointer; }
+        .item-card img { width: 60px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+        .item-info b { font-size: 15px; color: var(--main-pink); }
+        .item-info small { font-size: 12px; color: #666; display: block; }
+        #final-msg { border: 2px solid #ffd700; background: #fffdf0; padding: 20px; border-radius: 20px; font-style: italic; line-height: 1.6; margin-top: 15px; }
+        .dark-mode { background: #1a1a1a !important; }
+        .heart { position: fixed; top: -20px; color: var(--main-pink); animation: fall linear infinite; z-index: 1; pointer-events: none; }
+        .star { position: fixed; background: white; border-radius: 50%; z-index: 1; animation: starFall linear infinite; opacity: 0; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        @keyframes starFall { 0% { transform: translate(0,0) scale(0); opacity: 1; } 100% { transform: translate(-100px, 110vh) scale(1); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop><source src="urban_melody.mp3" type="audio/mpeg"></audio>
+
+    <div class="card" id="box">
+        <!-- ШАГ 1 -->
+        <div id="s1">
+            <div style="font-size: 10px; color: #888; margin-bottom: 5px;">🎶 Urban Melody - IVOXYGEN</div>
+            <div class="photo-frame"><img src="https://media.giphy.com"></div>
+            <h1>Любимый, это тебе! ❤️<br>Будешь моей валентинкой?</h1>
+            <div class="btns"><button id="yes">ДА!</button><button id="no">Нет</button></div>
+        </div>
+
+        <!-- ШАГ 2 -->
+        <div id="s2" class="hidden">
+            <h2>Пусть горы станут прахом, и реки высохнут до дна,<br>Но сердце верное моё — как вечная луна. ❤️</h2>
+            <button onclick="go(3)">Узнать тебя лучше ✨</button>
+        </div>
+
+        <!-- ШАГ 3 -->
+        <div id="s3" class="hidden">
+            <h2>Мини-анкета ❤️</h2>
+            <div class="scroll-area">
+                <input type="text" id="q1" placeholder="Твое идеальное утро со мной?">
+                <input type="text" id="q2" placeholder="Песня о нас?">
+                <input type="text" id="q3" placeholder="Куда улетим завтра?">
+                <input type="text" id="q4" placeholder="Лучшее воспоминание?">
+                <input type="text" id="q5" placeholder="Что во мне тебя радует?">
+            </div>
+            <button onclick="saveAnswers()" style="width:100%; margin-top:10px;">К выбору меню ❤️</button>
+        </div>
+
+        <!-- ШАГ 4 -->
+        <div id="s4" class="hidden">
+            <h2>Наш ужин 🥘</h2>
+            <div class="scroll-area" id="food-list"></div>
+            <button onclick="go(5)" style="width:100%; margin-top:10px; background:#fb8500;">Дальше к кино 🎬</button>
+        </div>
+
+        <!-- ШАГ 5 -->
+        <div id="s5" class="hidden">
+            <h2>Что посмотрим? 🍿</h2>
+            <div class="btns">
+                <button onclick="render('anime')">Аниме</button>
+                <button onclick="render('movie')">Кино</button>
+                <button onclick="render('series')">Сериалы</button>
+            </div>
+            <div class="scroll-area" id="media-list"></div>
+            <button onclick="pickRandom()" style="background:#6a0572; width:100%; margin-top:10px;">🎲 Рандом</button>
+            
+            <div id="final" class="hidden">
+                <div id="summary" style="background:#fdf2f4; padding:15px; border-radius:15px; text-align:left; font-size:14px; margin:15px 0;"></div>
+                <div id="choice-res"></div>
+                <div id="final-msg">
+                    Я очень сильно люблю тебя! Ты — моя главная опора и поддержка. Мы пройдем любые трудности, и я всегда буду твоим крепким тылом. Ты — моё всё! ❤️
+                </div>
+                <p style="color:var(--main-pink); font-weight:bold; margin-top:10px;">Заскринь и отправь мне! 📸</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById('bgMusic');
+        let ans = {};
+
+        const foodData = [
+            {n: "Паста с курицей и грибами", d: "Сливочный соус.", i: "https://povar.ru"},
+            {n: "Салат Цезарь", d: "Курица и сухарики.", i: "https://povar.ru"},
+            {n: "Греческий салат", d: "Свежесть и овощи.", i: "https://povar.ru"},
+            {n: "Курочка с пюре", d: "Домашний уют.", i: "https://povar.ru"},
+            {n: "Домашние бургеры", d: "Сытно и вкусно.", i: "https://povar.ru"}
+        ];
+
+        const mediaData = {
+            anime: [
+                {n: "Твое имя", d: "Связь душ.", i: "https://st.kp.yandex.net"},
+                {n: "Форма голоса", d: "О прощении.", i: "https://st.kp.yandex.net"},
+                {n: "Ходячий замок", d: "Магия.", i: "https://st.kp.yandex.net"},
+                {n: "Хоримия", d: "Милая любовь.", i: "https://st.kp.yandex.net"},
+                {n: "Сад изящных слов", d: "Шедевр.", i: "https://st.kp.yandex.net"},
+                {n: "Вайолет Эвергарден", d: "О любви.", i: "https://st.kp.yandex.net"},
+                {n: "Ее заветное желание", d: "Драма.", i: "https://st.kp.yandex.net"},
+                {n: "Торадора!", d: "Комедия.", i: "https://st.kp.yandex.net"},
+                {n: "Пять см в секунду", d: "Расстояние.", i: "https://st.kp.yandex.net"},
+                {n: "Кошечка из Сакурасо", d: "Творчество.", i: "https://st.kp.yandex.net"}
+            ],
+            movie: [
+                {n: "До встречи с тобой", d: "Пронзительно.", i: "https://st.kp.yandex.net"},
+                {n: "Ла-Ла Ленд", d: "О мечтах.", i: "https://st.kp.yandex.net"},
+                {n: "Дневник памяти", d: "Вечная любовь.", i: "https://st.kp.yandex.net"},
+                {n: "Бойфренд из будущего", d: "О времени.", i: "https://st.kp.yandex.net"},
+                {n: "Полночь в Париже", d: "Магия.", i: "https://st.kp.yandex.net"},
+                {n: "Виноваты звезды", d: "Сильная драма.", i: "https://st.kp.yandex.net"},
+                {n: "В метре друг от друга", d: "Близко.", i: "https://st.kp.yandex.net"},
+                {n: "С любовью, Рози", d: "Дружба.", i: "https://st.kp.yandex.net"},
+                {n: "Предложение", d: "Комедия.", i: "https://st.kp.yandex.net"},
+                {n: "Вечное сияние...", d: "Гениально.", i: "https://st.kp.yandex.net"}
+            ],
+            series: [
+                {n: "Нормальные люди", d: "Химия.", i: "https://st.kp.yandex.net"},
+                {n: "Алые сердца", d: "Дорама.", i: "https://st.kp.yandex.net"},
+                {n: "Один день", d: "История.", i: "https://st.kp.yandex.net"},
+                {n: "Демон", d: "Фэнтези.", i: "https://st.kp.yandex.net"},
+                {n: "Друзья", d: "Уют.", i: "https://st.kp.yandex.net"},
+                {n: "Постучись в мою дверь", d: "Турция.", i: "https://st.kp.yandex.net"},
+                {n: "Энн", d: "Нежно.", i: "https://st.kp.yandex.net"},
+                {n: "Это мы", d: "О семье.", i: "https://st.kp.yandex.net"},
+                {n: "Эмили в Париже", d: "Мода.", i: "https://st.kp.yandex.net"},
+                {n: "Мой демон", d: "Стильно.", i: "https://st.kp.yandex.net"}
+            ]
+        };
+
+        document.getElementById('no').onmouseover = (e) => {
+            e.target.style.position = 'fixed';
+            e.target.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            e.target.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+        };
+
+        document.getElementById('yes').onclick = () => { music.play(); go(2); };
+
+        function go(s) {
+            document.querySelectorAll('#box > div').forEach(d => d.classList.add('hidden'));
+            document.getElementById('s' + s).classList.remove('hidden');
+            if(s === 2) setInterval(spawnHeart, 300);
+            if(s === 4) document.getElementById('food-list').innerHTML = foodData.map(f => `<div class="item-card"><img src="${f.i}"><div class="item-info"><b>${f.n}</b><small>${f.d}</small></div></div>`).join('');
+        }
+
+        function saveAnswers() {
+            ans = {u: document.getElementById('q1').value, p: document.getElementById('q2').value, m: document.getElementById('q3').value, v: document.getElementById('q4').value, r: document.getElementById('q5').value};
+            go(4);
+        }
+
+        function render(t) {
+            document.getElementById('media-list').innerHTML = mediaData[t].map(m => `<div class="item-card" onclick="showFinal('${m.n}', '${m.i}')"><img src="${m.i}"><div class="item-info"><b>${m.n}</b><small>${m.d}</small></div></div>`).join('');
+        }
+
+        function showFinal(n, i) {
+            document.querySelectorAll('#s5 h2, #s5 .btns, #s5 > button, #media-list').forEach(el => el.classList.add('hidden'));
+            document.getElementById('final').classList.remove('hidden');
+            document.getElementById('summary').innerHTML = `<b>Твои ответы:</b><br>☀️ Утро: ${ans.u}<br>🎶 Песня: ${ans.p}<br>✈️ Полет: ${ans.m}<br>💕 Память: ${ans.v}<br>😊 Радость: ${ans.r}`;
+            document.getElementById('choice-res').innerHTML = `<h3>Наш выбор: ${n}</h3><img src="${i}" style="width:120px; border-radius:15px; border:3px solid var(--main-pink);">`;
+            document.body.classList.add('dark-mode');
+            setInterval(spawnStar, 100);
+        }
+
+        function pickRandom() {
+            const all = [...mediaData.anime, ...mediaData.movie, ...mediaData.series];
+            const r = all[Math.floor(Math.random() * all.length)];
+            showFinal(r.n, r.i);
+        }
+
+        function spawnHeart() {
+            const h = document.createElement('div'); h.className = 'heart'; h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw'; h.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(h); setTimeout(() => h.remove(), 5000);
+        }
+
+        function spawnStar() {
+            const s = document.createElement('div'); s.className = 'star';
+            const sz = Math.random() * 3 + 1 + 'px'; s.style.width = sz; s.style.height = sz;
+            s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 100 + 'vh';
+            s.style.animationDuration = Math.random() * 1 + 1 + 's';
+            document.body.appendChild(s); setTimeout(() => s.remove(), 2000);
+        }
+    </script>
+</body>
+</html>
