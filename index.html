@@ -39,6 +39,10 @@
             background: #fff5f6;
             border-radius: 50px;
             border: 1px solid #ffb1c1;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(5px);
         }
         
         .volume-slider {
@@ -115,6 +119,24 @@
             border: 1px solid var(--main-pink);
             color: var(--main-pink);
         }
+        
+        /* Компактный регулятор для маленьких экранов */
+        @media (max-width: 480px) {
+            .music-controls {
+                gap: 8px;
+                padding: 8px;
+            }
+            
+            .volume-slider {
+                width: 100px;
+            }
+            
+            .music-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -124,6 +146,13 @@
     </audio>
 
     <div class="card" id="box">
+        <!-- Музыкальный регулятор (будет на всех шагах) -->
+        <div class="music-controls" id="globalMusicControls">
+            <button class="music-btn" id="globalMusicToggle" onclick="toggleMusic()">🔊</button>
+            <input type="range" class="volume-slider" id="globalVolumeSlider" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
+            <span id="globalVolumePercent">50%</span>
+        </div>
+
         <!-- ШАГ 1 -->
         <div id="s1">
             <div style="font-size: 10px; color: #888; margin-bottom: 5px;">🎵 Urban Melody - IVOXYGEN</div>
@@ -159,11 +188,6 @@
         <!-- ШАГ 4 -->
         <div id="s4" class="hidden">
             <h2>Наш ужин 🥘</h2>
-            <div class="music-controls">
-                <button class="music-btn" id="musicToggle" onclick="toggleMusic()">🔊</button>
-                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this.value)">
-                <span id="volumePercent">50%</span>
-            </div>
             <div class="scroll-area" id="food-list"></div>
             <div id="selectedFood" class="selected-items hidden">
                 <h4>Выбранное блюдо:</h4>
@@ -175,11 +199,6 @@
         <!-- ШАГ 5 -->
         <div id="s5" class="hidden">
             <h2>Что посмотрим? 🍿</h2>
-            <div class="music-controls">
-                <button class="music-btn" id="musicToggle2" onclick="toggleMusic()">🔊</button>
-                <input type="range" class="volume-slider" id="volumeSlider2" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this.value)">
-                <span id="volumePercent2">50%</span>
-            </div>
             <div class="btns">
                 <button onclick="render('anime')">Аниме</button>
                 <button onclick="render('movie')">Кино</button>
@@ -203,8 +222,8 @@
     <script>
         const music = document.getElementById('bgMusic');
         let ans = {};
-        let selectedFood = null; // Переменная для хранения выбранного блюда
-        let selectedMedia = null; // Переменная для хранения выбранного фильма
+        let selectedFood = null;
+        let selectedMedia = null;
 
         // Функция для управления музыкой
         function toggleMusic() {
@@ -227,7 +246,7 @@
         function changeVolume(value) {
             music.volume = value;
             const percent = Math.round(value * 100);
-            document.querySelectorAll('#volumePercent, #volumePercent2').forEach(el => {
+            document.querySelectorAll('#globalVolumePercent').forEach(el => {
                 el.textContent = percent + '%';
             });
             document.querySelectorAll('.volume-slider').forEach(slider => {
@@ -289,7 +308,7 @@
         };
 
         function go(s) {
-            document.querySelectorAll('#box > div').forEach(d => d.classList.add('hidden'));
+            document.querySelectorAll('#box > div[id^="s"]').forEach(d => d.classList.add('hidden'));
             document.getElementById('s' + s).classList.remove('hidden');
             if(s === 2) setInterval(spawnHeart, 300);
             if(s === 4) {
@@ -311,7 +330,6 @@
             document.getElementById('selectedFood').classList.remove('hidden');
             document.getElementById('selectedFoodName').textContent = selectedFood.n + ' ❤️';
             
-            // Подсветка выбранного блюда
             document.querySelectorAll('.item-card').forEach((card, i) => {
                 if (i === index) {
                     card.style.background = '#ffe3e8';
@@ -323,7 +341,6 @@
             });
         }
 
-        // Функция для перехода к кино с выбранным блюдом
         function goToMovies() {
             if (!selectedFood) {
                 alert('Сначала выбери блюдо! ❤️');
@@ -364,7 +381,6 @@
             document.querySelectorAll('#s5 h2, #s5 .btns, #s5 > button, #media-list').forEach(el => el.classList.add('hidden'));
             document.getElementById('final').classList.remove('hidden');
             
-            // Формируем итоговое резюме
             document.getElementById('summary').innerHTML = `
                 <b>❤️ Наш идеальный вечер:</b><br>
                 ☀️ Утро: ${ans.u}<br>
@@ -374,7 +390,6 @@
                 😊 Радость: ${ans.r}
             `;
             
-            // Показываем выбранные блюдо и фильм
             document.getElementById('selectedItems').innerHTML = `
                 <h4>🍽️ Наш ужин:</h4>
                 <div class="selected-item">${selectedFood.n}</div>
@@ -423,5 +438,4 @@
     </script>
 </body>
 </html>
-
 
